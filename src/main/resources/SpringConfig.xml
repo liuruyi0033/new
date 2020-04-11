@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context 
+			http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/aop 
+			http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+			http://www.springframework.org/schema/tx 
+    		http://www.springframework.org/schema/tx/spring-tx.xsd
+    		http://www.springframework.org/schema/mvc
+        	http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+    <!-- 添加支持注解扫描bean的配置
+		base-package:指定需要扫描的包
+	 -->
+	<context:component-scan base-package="com"></context:component-scan>
+	<!-- 添加AOP的注解支持  -->
+	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+	
+	<!--配置注解支持的处理器映射器和处理器适配器  -->
+	<mvc:annotation-driven validator="myValidator"></mvc:annotation-driven>
+	
+	
+	<!--配置数据源  -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+		<property name="url" 
+			value="jdbc:mysql://localhost:3306/ssm?useUnicode=true&amp;characterEncoding=utf-8&amp;autoReconnect=true"></property>
+		<property name="username" value="root"></property>
+		<property name="password" value="root"></property>
+		<!-- 初始化连接大小 -->
+		<property name="initialSize" value="0"></property>
+		<!-- 连接池最大空闲 -->
+		<property name="maxIdle" value="20"></property>
+		<!-- 连接池最小空闲 -->
+		<property name="minIdle" value="1"></property>
+	</bean>
+	
+	<!--整合mybatis的相关配置  -->
+    <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 配置注入数据源 --> 
+		<property name="dataSource" ref="dataSource" />
+		<!-- 配置自动扫描mapper映射文件，指定路径即可：
+			所有com.neu.mapping包下的xml文件被自动扫描 -->
+		<property name="mapperLocations" value="classpath:com/neu/mapping/*.xml" />
+	</bean>
+	<!-- spring和mybatis整合，自动扫描mapper接口 -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 配置sql会话工厂，实际上就是上面定义的sqlSessionFactory --> 
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<!-- 配置自动扫描mapper接口的包路径：
+			 spring自动扫描com.neu.dao包下的所有接口 -->
+		<property name="basePackage" value="com.neu.dao" />
+	</bean>
+	
+	<!-- 数据校验相关配置 -->
+	<!--配置校验器需要的配置文件，用于错误信息提示的  -->
+	<bean id="res"
+		class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<!-- 设置配置文件路径 -->
+		<property name="basenames">
+			<list>
+				<value>classpath:validate</value>
+			</list>
+		</property>
+		<!-- 设置编码格式 -->
+		<property name="fileEncodings" value="utf-8" />
+		<!-- 设置默认编码，处理中文乱码 -->
+		<property name="defaultEncoding" value="utf-8"/> 
+		<!-- 设置缓存时间 -->
+		<property name="cacheSeconds" value="120" />
+	</bean>
+	<!--配置校验器  -->
+    <bean id="myValidator"
+    	class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+    	<!-- 配置hibernate的校验器，并注入 -->
+    	<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+    	<!-- 配置校验器需要的配置文件 -->
+    	<property name="validationMessageSource" ref="res" />
+    </bean>
+    
+	
+	<!-- 文件上传的解析器 -->
+	<bean id="multipartResolver" 
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!--添加文件上传最大限制5M  -->
+		<property name="maxUploadSize">
+			<value>5242880</value>
+		</property>
+	</bean>
+	
+	 <!--spring事务支持的相关配置  -->
+	 <!--配置事务管理器  -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<!--数据源的注入  -->
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!--添加对事务注解的支持  :
+		transaction-manager：指定定义的事务管理器，引用的是事务管理器bean的id属性
+		-->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	 	
+
+</beans>
