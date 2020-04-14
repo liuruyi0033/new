@@ -3,8 +3,48 @@
 	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.neu.dao.KeHuXinXiDaoMapper">
-	<!-- 添加一个数据库访问操作：查询所有用户信息 -->
-	<select id="getAllKeHu" resultType="com.neu.bean.KeHuXinXi">
-		select * from kehuxinxi
+	<!-- 查询id最大的客户编号 -->
+	<select id="getKeHuBiaoHao" resultType="String">
+		select kehubianhao from kehuxinxi order by id DESC limit 0,1;
 	</select>
+	<!-- 查询所有的客户数量 -->
+	<select id="getCount" resultType="Integer">
+		select COUNT(*) from kehuxinxi where flag=0
+	</select>
+
+	<!-- 查询所有的客户 -->
+	<select id="getAllKeHu" resultType="com.neu.bean.KeHuXinXi">
+		select * from kehuxinxi where flag=0 limit #{index},#{count}
+	</select>
+	
+	<!-- 查询单个客户信息 -->
+	<select id="KeHuByBianhao" resultType="com.neu.bean.KeHuXinXi">
+		select * from kehuxinxi where kehubianhao = #{kehubianhao}
+	</select>
+	
+	<!-- 添加客户 -->
+	<insert id="addKeHu" parameterType="com.neu.bean.KeHuXinXi">
+		INSERT INTO kehuxinxi(kehubianhao,kehumingcheng,diqu,
+		kehujingli,kehudengji,kehumanyidu,kehuxinyongdu,dizhi,youbian,
+		dianhua,chuanzhen,wangzhi,yingyezhizhao,faren,zhucezijin,
+		nianyingyee,kaihuyinhang,yinhangzhanghu,dishui,guoshui)
+		VALUES (#{kehubianhao},#{kehumingcheng},#{diqu},
+		#{kehujingli},#{kehudengji},#{kehumanyidu},#{kehuxinyongdu},#{dizhi},#{youbian},
+		#{dianhua},#{chuanzhen},#{wangzhi},#{yingyezhizhao},#{faren},#{zhucezijin},
+		#{nianyingyee},#{kaihuyinhang},#{yinhangzhanghu},#{dishui},#{guoshui})
+	</insert>
+	
+	<!-- 删除客户 -->
+	<update id="deleteKeHu" parameterType="com.neu.bean.KeHuXinXi">
+		UPDATE kehuxinxi set flag=1 where kehubianhao = #{kehubianhao}
+	</update>
+	
+	<!-- 修改客户信息 -->
+	<update id="updateKeHu" parameterType="com.neu.bean.KeHuXinXi">
+		UPDATE kehuxinxi set kehubianhao=#{kehubianhao},kehumingcheng=#{kehumingcheng},diqu=#{diqu},
+		kehujingli=#{kehujingli},kehudengji=#{kehudengji},kehumanyidu=#{kehumanyidu},kehuxinyongdu=#{kehuxinyongdu},dizhi=#{dizhi},youbian=#{youbian},
+		dianhua=#{dianhua},chuanzhen=#{chuanzhen},wangzhi=#{wangzhi},yingyezhizhao=#{yingyezhizhao},faren=#{faren},zhucezijin=#{zhucezijin},
+		nianyingyee=#{nianyingyee},kaihuyinhang=#{kaihuyinhang},yinhangzhanghu=#{yinhangzhanghu},dishui=#{dishui},guoshui=#{guoshui} 
+		where kehubianhao=#{kehubianhao}
+	</update>
 </mapper>

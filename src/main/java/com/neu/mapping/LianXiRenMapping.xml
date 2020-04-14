@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.dao.LianXiRenDaoMapper">
+	<!-- 查询客户编号对应的客户名称 -->
+	<select id="getKeHuMingCheng" resultType="String">
+		select kehumingcheng from kehuxinxi where kehubianhao=#{kehubianhao} and flag = 0
+	</select>
+	<!-- 查询所有的客户数量 -->
+	<select id="getCount" resultType="Integer">
+		select COUNT(*) from lianxiren where flag=0 limit #{index},#{count}
+	</select>
+	<!-- 查询所有联系人-->
+	<select id="getAllLianXiRen" resultType="com.neu.bean.LianXiRen">
+		select * from lianxiren where kehubianhao=#{kehubianhao} and flag = 0
+	</select>
+	<!-- 查询单个联系人 -->
+	<select id="lianXiRenById" resultType="com.neu.bean.LianXiRen">
+		select * from LianXiRen where id = #{id}
+	</select>
+	<!-- 添加联系人 -->
+	<insert id="addLianXiRen" parameterType="com.neu.bean.LianXiRen">
+		INSERT INTO lianxiren(kehubianhao,xingming,xingbie,zhiwei,dianhua,shouji,beizhu) 
+		VALUES (#{kehubianhao},#{xingming},#{xingbie},#{zhiwei},#{dianhua},#{shouji},#{beizhu}) 
+	</insert>
+	<!-- 修改联系人 -->
+	<update id="updateLianXiRen" parameterType="com.neu.bean.LianXiRen">
+		UPDATE lianxiren set kehubianhao=#{kehubianhao},xingming=#{xingming},
+		xingbie=#{xingbie},zhiwei=#{zhiwei},dianhua=#{dianhua},shouji=#{shouji},beizhu=#{beizhu}  
+		where id=#{id}
+	</update>
+	<!-- 删除联系人 -->
+	<update id="deleteLianXiRen" parameterType="Integer">
+		UPDATE lianxiren set flag=1 WHERE id=#{id}
+	</update>
+</mapper>

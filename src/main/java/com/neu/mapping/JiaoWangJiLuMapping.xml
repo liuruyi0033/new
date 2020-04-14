@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.dao.JiaoWangJiLuDaoMapper">
+	<!-- 查询客户编号对应的客户名称 -->
+	<select id="getKeHuMingCheng" resultType="String">
+		select kehumingcheng from kehuxinxi where kehubianhao=#{kehubianhao} and flag = 0
+	</select>
+	<!-- 查询所有交往记录-->
+	<select id="getAllJiaoWangJiLu" resultType="com.neu.bean.JiaoWangJiLu">
+		select * from jiaowangjilu where kehubianhao=#{kehubianhao} and flag = 0
+	</select>
+	<!-- 添加交往记录 -->
+	<insert id="addJiaoWangJiLu" parameterType="com.neu.bean.JiaoWangJiLu">
+		INSERT INTO jiaowangjilu(kehubianhao,shijian,didian,gaiyao,beizhu,xiangxixinxi) 
+		VALUES (#{kehubianhao},#{shijian},#{didian},#{gaiyao},#{beizhu},#{xiangxixinxi}) 
+	</insert>
+	<!-- 查询单个交往记录-->
+	<select id="jiaoWangJiLuById" resultType="com.neu.bean.JiaoWangJiLu">
+		select * from jiaowangjilu where id=#{id} and flag = 0
+	</select>
+	<!-- 修改交往记录 -->
+	<update id="updateJiaoWangJiLu" parameterType="com.neu.bean.JiaoWangJiLu">
+		UPDATE jiaowangjilu set kehubianhao=#{kehubianhao},shijian=#{shijian},
+		didian=#{didian},gaiyao=#{gaiyao},beizhu=#{beizhu},xiangxixinxi=#{xiangxixinxi}  
+		where id=#{id}
+	</update>
+	<!-- 删除交往记录 -->
+	<update id="deleteJiaoWangJiLu" parameterType="Integer">
+		UPDATE jiaowangjilu set flag=1 where id=#{id}
+	</update>
+</mapper>

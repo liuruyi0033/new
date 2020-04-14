@@ -16,33 +16,47 @@
 	  <li class="layui-nav-item">客户管理</li>
 	</ul> 
 	<br/>
-	<a href="添加新客户.html" class="layui-btn layui-col-xs-offset11">添加新客户</a>
+	<a href="tianjiakehu.jsp" class="layui-btn layui-col-xs-offset11">添加新客户</a>
 <div class="layui-form">
-  <table class="layui-table">
-    <thead>
-      <tr>
-        <th>客户编号</th>
-        <th>名称</th>
-        <th>客户等级</th>
-        <th>客户经理</th>
-        <th>操作</th>
-      </tr> 
-    </thead>
-    <tbody>
-    	<c:forEach items="${khxx }" var="khxx">
-			<tr>
-				<td>${khxx.kehubianhao }</td>
-				<td>${khxx.kehumingcheng }</td>
-				<td>${khxx.kehudengji }</td>
-				<td>${khxx.kehujingli }</td>
-				<td>
-					<a href="" class="layui-btn"><i class="layui-icon"></i></a>
-					<a href="" class="layui-btn layui-btn-danger"><i class="layui-icon"></i></a>
-				</td>
-			</tr>
-		</c:forEach>
-    </tbody>
-  </table>
+	<table class="layui-hide" id="test" lay-filter="test"></table>
+	<script type="text/html" id="barDemo">
+ 		<a class="layui-btn layui-btn-xs" lay-event="edit">详情</a>
+ 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+	</script>
+	<script src="layui/layui.js" charset="utf-8"></script>
+	<script>
+		layui.use('table', function(){
+		  var table = layui.table;
+		  
+		  table.render({
+		    elem: '#test'
+		    ,url:'getAllKeHu.do'
+		    ,cols: [[
+		    	{ title: '序号',type:'numbers'}
+		      ,{field:'kehubianhao', title:'客户编号'}
+		      ,{field:'kehumingcheng', title:'名称'}
+		      ,{field:'kehudengji', title:'客户等级'}
+		      ,{field:'kehujingli', title:'客户经理'}
+		      ,{fixed:'right', title:'操作', toolbar: '#barDemo'}
+		    ]]
+		    ,limit:5
+	    	,limits:[5,10,15,20]
+		    ,page: true
+		  });
+		  
+		  table.on('tool(test)', function(obj){
+		    var data = obj.data;
+		    //console.log(obj)
+		    if(obj.event === 'del'){
+		      layer.confirm('真的删除行么', function(index){
+	    	  	window.location.href = 'deleteKeHu.do?kehubianhao='+data.kehubianhao;
+		      });
+		    } else if(obj.event === 'edit'){
+		    	window.location.href = 'KeHuByBianhao.do?kehubianhao='+data.kehubianhao;
+		    }
+		  });
+		});
+	</script>
 </div>
 </body>
 </html>
