@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.dao.KeHuLiuShiDaoMapper">
+	<!-- 查询所有的客户编号 -->
+	<select id="getAllKeHuBianHao" resultType="String">
+		select kehubianhao from kehuxinxi where flag = 0
+	</select>
+	<!-- 查询客户最后一次交往的时间 -->
+	<select id="getLastTime" resultType="String" parameterType="String">
+		select shijian from jiaowangjilu where kehubianhao=#{kehubianhao} and flag=0 order by shijian DESC limit 0,1
+	</select>
+	<!-- 查询该客户的数量 -->
+	<select id="getShuLiang" resultType="Integer" parameterType="String">
+		select COUNT(*) from kehuliushi where kehubianhao=#{kehubianhao}
+	</select>
+	<!-- 查询该客户的信息 -->
+	<select id="getThisKeHu" resultType="com.neu.bean.KeHuXinXi" parameterType="String">
+		select * from kehuxinxi where kehubianhao = #{kehubianhao} and flag=0
+	</select>
+	<!-- 添加客户流失 -->
+	<insert id="addKeHuLiuShi" parameterType="com.neu.bean.KeHuLiuShi">
+		INSERT INTO kehuliushi(kehubianhao,kehumingcheng,kehujingli,zuihoushijian) 
+		VALUES (#{kehubianhao},#{kehumingcheng},#{kehujingli},#{zuihoushijian}) 
+	</insert>
+	<!-- 查询客户流失记录的数量 -->
+	<select id="getCount" resultType="Integer">
+		select COUNT(*) from kehuliushi
+	</select>
+	<!-- 查询所有的客户流失记录 -->
+	<select id="getAllKeHuLiuShi" resultType="com.neu.bean.KeHuLiuShi">
+		select * from kehuliushi limit #{index},#{count}
+	</select>
+	<!-- 查询单个客户流失记录 -->
+	<select id="getKeHuLiuShiById" resultType="com.neu.bean.KeHuLiuShi" parameterType="Integer">
+		select * from kehuliushi where id=#{di}
+	</select>
+	
+	<!-- 修改客户流失记录 -->
+	<update id="updateKeHuLiuShi" parameterType="com.neu.bean.KeHuLiuShi">
+		UPDATE kehuliushi set zanhuancuoshi=#{zanhuancuoshi},liushiyuanyin=#{liushiyuanyin},
+		querenshijian=#{querenshijian},zhuangtai=#{zhuangtai} where id=#{id}
+	</update>
+</mapper>
