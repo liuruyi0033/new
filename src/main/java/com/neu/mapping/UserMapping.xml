@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.neu.dao.UserDaoMapper">
+	<!-- 查询用户 -->
+	<select id="getUser" resultType="com.neu.bean.User">
+		select * from user where userName=#{userName} and userPwd=#{userPwd} and role=#{role} and flag = 1
+	</select>
+	<!-- 查询用户名是否存在 -->
+	<select id="getUserName" resultType="com.neu.bean.User">
+		select * from user where userName=#{userName} and flag = 1
+	</select>
+	<!-- 添加客户 -->
+	<insert id="addUser" parameterType="com.neu.bean.User">
+		INSERT INTO user(userName,userPwd,role)
+		VALUES (#{userName},#{userPwd},#{role})
+	</insert>
+</mapper>
