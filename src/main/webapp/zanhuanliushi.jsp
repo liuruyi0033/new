@@ -18,6 +18,7 @@
 		<br/>
 		<form action="updateKeHuLiuShi.do" method="post" class="layui-form">
 			<input type="hidden" name="liushiyuanyin" value="">
+			<input type="hidden" name="zhuangtai" value=0>
 			<a href="getKeHuLiuShiById.do?id=${khls.id }&queren=true" class="layui-btn layui-btn-danger layui-col-xs-offset9">确认流失</a>
 			<input type="submit" value="保存" class="layui-btn layui-col-xs-offset10" />
 			<a href="kehuliushi.jsp" class="layui-btn layui-col-xs-offset11">返回</a>
