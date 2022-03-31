@@ -9,7 +9,7 @@
   <url>http://maven.apache.org</url>
   <!-- 定义一个统一的版本属性 -->
   <properties>
-  	<spring.version>4.0.3.RELEASE</spring.version>
+  	<spring.version>5.3.18</spring.version>
   </properties>
   <dependencies>
   	<!--添加spring框架相关的依赖  -->
